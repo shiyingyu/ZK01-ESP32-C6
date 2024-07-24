@@ -1,0 +1,25 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "files.associations": {
+    "esp_chip_info.h": "c",
+    "inttypes.h": "c",
+    "sdkconfig.h": "c",
+    "task.h": "c"
+  },
+  "idf.adapterTargetName": "esp32c6",
+  "idf.portWin": "COM12",
+  "idf.flashType": "UART",
+  "idf.openOcdConfigs": [
+    "board/esp32c6-ftdi.cfg"
+  ],
+  "idf.espIdfPathWin": "e:\\espressif\\esp-idf\\v5.2.1\\esp-idf",
+  "idf.pythonBinPathWin": "e:\\espressif\\python_env\\idf5.2_py3.11_env\\Scripts\\python.exe",
+  "idf.toolsPathWin": "e:\\espressif",
+  "idf.customExtraPaths": "e:\\espressif\\tools\\xtensa-esp-elf-gdb\\12.1_20231023\\xtensa-esp-elf-gdb\\bin;e:\\espressif\\tools\\riscv32-esp-elf-gdb\\12.1_20231023\\riscv32-esp-elf-gdb\\bin;e:\\espressif\\tools\\xtensa-esp-elf\\esp-13.2.0_20230928\\xtensa-esp-elf\\bin;e:\\espressif\\tools\\riscv32-esp-elf\\esp-13.2.0_20230928\\riscv32-esp-elf\\bin;e:\\espressif\\tools\\esp32ulp-elf\\2.35_20220830\\esp32ulp-elf\\bin;e:\\espressif\\tools\\cmake\\3.24.0\\bin;e:\\espressif\\tools\\openocd-esp32\\v0.12.0-esp32-20230921\\openocd-esp32\\bin;e:\\espressif\\tools\\ninja\\1.11.1;e:\\espressif\\tools\\idf-exe\\1.0.3;e:\\espressif\\tools\\ccache\\4.8\\ccache-4.8-windows-x86_64;e:\\espressif\\tools\\dfu-util\\0.11\\dfu-util-0.11-win64;e:\\espressif\\tools\\esp-rom-elfs\\20230320",
+  "idf.customExtraVars": {
+    "OPENOCD_SCRIPTS": "e:\\espressif\\tools\\openocd-esp32\\v0.12.0-esp32-20230921/openocd-esp32/share/openocd/scripts",
+    "IDF_CCACHE_ENABLE": "1",
+    "ESP_ROM_ELF_DIR": "e:\\espressif\\tools\\esp-rom-elfs\\20230320/"
+  },
+  "idf.gitPathWin": "e:\\espressif\\tools\\idf-git\\2.39.2\\cmd\\git.exe"
+}
