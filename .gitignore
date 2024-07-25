@@ -1,3 +1,4 @@
 *.old
 *.bak
 build/
+managed_components/

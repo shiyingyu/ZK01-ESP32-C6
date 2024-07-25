@@ -13,6 +13,7 @@
 #include "esp_flash.h"
 #include "esp_system.h"
 #include "zk01_pin.h"
+#include "bdc.h"
 
 void init_gpio() {
     gpio_config_t conf = {};
@@ -48,12 +49,14 @@ void app_main(void)
     uint32_t cnt = 0;
     printf("Init gpio pins.\n");
     init_gpio();
+    bdc_init();
 
     while(1) {
         cnt ++;
         printf("Toggling system led.\n");
+        printf("/*%d*/\r\n", motor_ctrl_ctx.report_pulses);
         gpio_set_level(LED_RUN1_PIN, cnt % 2);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
         fflush(stdout);
     }
 }
