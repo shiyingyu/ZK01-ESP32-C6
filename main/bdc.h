@@ -10,7 +10,7 @@
 static const char *TAG = "bdc";
 
 #define BDC_MCPWM_TIMER_RESOLUTION_HZ 10000000 // 10MHz, 1 tick = 0.1us
-#define BDC_MCPWM_FREQ_HZ 25000 // 25KHz
+#define BDC_MCPWM_FREQ_HZ 2500 // 25KHz
 #define BDC_MCPWM_DUTY_TICK_MAX (BDC_MCPWM_TIMER_RESOLUTION_HZ / BDC_MCPWM_FREQ_HZ) // maximum value we can set for the duty cycle, in ticks
 #define BDC_MCPWM_GPIO_A UP_PWM_PIN
 #define BDC_MCPWM_GPIO_B UP_EN_PIN
@@ -53,7 +53,9 @@ static void pid_loop_cb(void *args)
 
     // set the new speed
     pid_compute(pid_ctrl, error, &new_speed);
+    new_speed = 2000;
     bdc_motor_set_speed(motor, (uint32_t)new_speed);
+    ESP_LOGI(TAG, "NEW SPEED IS %.2f", new_speed);
 }
 
 void bdc_init() {
@@ -72,6 +74,7 @@ void bdc_init() {
     ESP_ERROR_CHECK(bdc_motor_new_mcpwm_device(&motor_config, &mcpwm_config, &motor));
     motor_ctrl_ctx.motor = motor;
     
+    // PULSE COUNTER
     ESP_LOGI(TAG, "Init pcnt driver to decode rotary signal");
     pcnt_unit_config_t unit_config = {
         .low_limit = BDC_ENCODER_PCNT_LOW_LIMIT,
@@ -96,6 +99,7 @@ void bdc_init() {
     };
     pcnt_channel_handle_t pcnt_chan_b = NULL;
     ESP_ERROR_CHECK(pcnt_new_channel(pcnt_unit, &chan_b_config, &pcnt_chan_b));
+
     ESP_ERROR_CHECK(pcnt_channel_set_edge_action(pcnt_chan_a, PCNT_CHANNEL_EDGE_ACTION_DECREASE, PCNT_CHANNEL_EDGE_ACTION_INCREASE));
     ESP_ERROR_CHECK(pcnt_channel_set_level_action(pcnt_chan_a, PCNT_CHANNEL_LEVEL_ACTION_KEEP, PCNT_CHANNEL_LEVEL_ACTION_INVERSE));
     ESP_ERROR_CHECK(pcnt_channel_set_edge_action(pcnt_chan_b, PCNT_CHANNEL_EDGE_ACTION_INCREASE, PCNT_CHANNEL_EDGE_ACTION_DECREASE));

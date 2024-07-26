@@ -9,7 +9,8 @@
 			"esp_chip_info.h": "c",
 			"inttypes.h": "c",
 			"sdkconfig.h": "c",
-			"task.h": "c"
+			"task.h": "c",
+			"pulse_cnt.h": "c"
 		}
 	}
 }
