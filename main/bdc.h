@@ -10,10 +10,10 @@
 static const char *TAG = "bdc";
 
 #define BDC_MCPWM_TIMER_RESOLUTION_HZ 10000000 // 10MHz, 1 tick = 0.1us
-#define BDC_MCPWM_FREQ_HZ 2500 // 25KHz
+#define BDC_MCPWM_FREQ_HZ 25000 // 25KHz
 #define BDC_MCPWM_DUTY_TICK_MAX (BDC_MCPWM_TIMER_RESOLUTION_HZ / BDC_MCPWM_FREQ_HZ) // maximum value we can set for the duty cycle, in ticks
 #define BDC_MCPWM_GPIO_A UP_PWM_PIN
-#define BDC_MCPWM_GPIO_B UP_EN_PIN
+#define BDC_MCPWM_GPIO_B DOWN_PWM_PIN
 
 #define BDC_ENCODER_GPIO_A            P_E0_PIN
 #define BDC_ENCODER_GPIO_B            P_E1_PIN
@@ -31,6 +31,8 @@ typedef struct {
 } motor_control_context_t;
 
 motor_control_context_t motor_ctrl_ctx;
+bdc_motor_handle_t motor = NULL;
+esp_timer_handle_t pid_loop_timer = NULL;
 
 static void pid_loop_cb(void *args)
 {
@@ -53,9 +55,9 @@ static void pid_loop_cb(void *args)
 
     // set the new speed
     pid_compute(pid_ctrl, error, &new_speed);
-    new_speed = 2000;
+    new_speed = 200;
     bdc_motor_set_speed(motor, (uint32_t)new_speed);
-    ESP_LOGI(TAG, "NEW SPEED IS %.2f", new_speed);
+    //ESP_LOGI(TAG, "NEW SPEED IS %.2f", new_speed);
 }
 
 void bdc_init() {
@@ -70,7 +72,6 @@ void bdc_init() {
         .group_id = 0,
         .resolution_hz = BDC_MCPWM_TIMER_RESOLUTION_HZ,
     };
-    bdc_motor_handle_t motor = NULL;
     ESP_ERROR_CHECK(bdc_motor_new_mcpwm_device(&motor_config, &mcpwm_config, &motor));
     motor_ctrl_ctx.motor = motor;
     
@@ -135,9 +136,18 @@ void bdc_init() {
         .arg = &motor_ctrl_ctx,
         .name = "pid_loop"
     };
-    esp_timer_handle_t pid_loop_timer = NULL;
     ESP_ERROR_CHECK(esp_timer_create(&periodic_timer_args, &pid_loop_timer));
+}
 
+void bdc_stop() {
+    bdc_motor_brake(motor);
+    gpio_set_level(UP_EN_PIN, 0);
+    gpio_set_level(DOWN_EN_PIN, 0);
+    esp_timer_stop(pid_loop_timer);
+    bdc_motor_disable(motor);
+}
+void bdc_up() {
+    bdc_stop();
     ESP_LOGI(TAG, "Enable motor");
     ESP_ERROR_CHECK(bdc_motor_enable(motor));
     ESP_LOGI(TAG, "Forward motor");
@@ -145,5 +155,20 @@ void bdc_init() {
 
     ESP_LOGI(TAG, "Start motor speed loop");
     ESP_ERROR_CHECK(esp_timer_start_periodic(pid_loop_timer, BDC_PID_LOOP_PERIOD_MS * 1000));
+
+    gpio_set_level(UP_EN_PIN, 1);
+}
+
+void bdc_down() {
+    bdc_stop();
+    ESP_LOGI(TAG, "Enable motor");
+    ESP_ERROR_CHECK(bdc_motor_enable(motor));
+    ESP_LOGI(TAG, "Forward motor");
+    ESP_ERROR_CHECK(bdc_motor_reverse(motor));
+
+    ESP_LOGI(TAG, "Start motor speed loop");
+    ESP_ERROR_CHECK(esp_timer_start_periodic(pid_loop_timer, BDC_PID_LOOP_PERIOD_MS * 1000));
+
+    gpio_set_level(DOWN_EN_PIN, 1);
 }
 #endif // BDC_H

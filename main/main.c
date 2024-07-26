@@ -14,8 +14,10 @@
 #include "esp_system.h"
 #include "zk01_pin.h"
 #include "bdc.h"
+#include "set_button.h"
 
-void init_gpio() {
+
+void gpio_init() {
     gpio_config_t conf = {};
 
     // pins used as gpio output
@@ -26,8 +28,6 @@ void init_gpio() {
     conf.pin_bit_mask = (1U << RS485_DIR_PIN) | 
                         (1U << UP_EN_PIN) | 
                         (1U << DOWN_EN_PIN) | 
-                        (1U << UP_PWM_PIN) | 
-                        (1U << DOWN_PWM_PIN) | 
                         (1U << LED_RUN1_PIN) |
                         0;
     gpio_config(&conf);
@@ -44,19 +44,21 @@ void init_gpio() {
     gpio_config(&conf);
 
 }
+
 void app_main(void)
 {
     uint32_t cnt = 0;
     printf("Init gpio pins.\n");
-    init_gpio();
+    gpio_init();
     bdc_init();
+    set_button_init();
 
     while(1) {
         cnt ++;
-        printf("Toggling system led.\n");
-        printf("/*%d*/\r\n", motor_ctrl_ctx.report_pulses);
+        //printf("Toggling system led.\n");
+        //printf("/*%d*/\r\n", motor_ctrl_ctx.report_pulses);
         gpio_set_level(LED_RUN1_PIN, cnt % 2);
-        vTaskDelay(100 / portTICK_PERIOD_MS);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
         fflush(stdout);
     }
 }

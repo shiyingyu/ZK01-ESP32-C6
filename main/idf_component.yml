@@ -1,4 +1,5 @@
 dependencies:
+  espressif/button: "=*"
   pid_ctrl: "^0.1.1"
   bdc_motor: "^0.1.0"
   
