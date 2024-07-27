@@ -14,7 +14,8 @@
 			"bdc.h": "c",
 			"zk01_pin.h": "c",
 			"bdc_motor.h": "c",
-			"esp_timer.h": "c"
+			"esp_timer.h": "c",
+			"esp_gatt_defs.h": "c"
 		}
 	}
 }

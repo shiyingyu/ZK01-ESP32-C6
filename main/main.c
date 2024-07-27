@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <inttypes.h>
+#include "nvs.h"
+#include "nvs_flash.h"
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -15,6 +17,7 @@
 #include "zk01_pin.h"
 #include "bdc.h"
 #include "set_button.h"
+#include "ble.h"
 
 
 void gpio_init() {
@@ -47,11 +50,19 @@ void gpio_init() {
 
 void app_main(void)
 {
+    esp_err_t ret;
+    ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK( ret );
     uint32_t cnt = 0;
     printf("Init gpio pins.\n");
     gpio_init();
     bdc_init();
     set_button_init();
+    ble_init();
 
     while(1) {
         cnt ++;
