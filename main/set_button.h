@@ -4,11 +4,24 @@
 #include "bdc.h"
 #include "esp_log.h"
 
+static const char *TAG = "set_button";
 button_handle_t set_btn = NULL;
+static int dir = 0;
 
 void set_btn_single_click_cb(void *arg,void *usr_data) {
     ESP_LOGI(TAG, "Set button single click callback.");
-    bdc_up();
+    if (dir == 0) {
+        bdc_up();
+        dir = 1;
+    }
+    else if (dir == 1) {
+        bdc_down();
+        dir = 2;
+    }
+    else {
+        bdc_stop();
+        dir = 0;
+    }
 }
 
 void set_btn_double_click_cb(void *arg,void *usr_data) {

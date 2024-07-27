@@ -10,7 +10,11 @@
 			"inttypes.h": "c",
 			"sdkconfig.h": "c",
 			"task.h": "c",
-			"pulse_cnt.h": "c"
+			"pulse_cnt.h": "c",
+			"bdc.h": "c",
+			"zk01_pin.h": "c",
+			"bdc_motor.h": "c",
+			"esp_timer.h": "c"
 		}
 	}
 }

@@ -7,7 +7,7 @@
     "task.h": "c"
   },
   "idf.adapterTargetName": "esp32c6",
-  "idf.portWin": "COM3",
+  "idf.portWin": "COM12",
   "idf.flashType": "UART",
   "idf.openOcdConfigs": [
     "board/esp32c6-ftdi.cfg"
