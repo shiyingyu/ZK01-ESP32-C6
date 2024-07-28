@@ -15,7 +15,10 @@
 			"zk01_pin.h": "c",
 			"bdc_motor.h": "c",
 			"esp_timer.h": "c",
-			"esp_gatt_defs.h": "c"
+			"esp_gatt_defs.h": "c",
+			"esp_gap_ble_api.h": "c",
+			"esp_gattc_api.h": "c",
+			"esp_gatt_common_api.h": "c"
 		}
 	}
 }
